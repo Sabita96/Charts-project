@@ -1,9 +1,10 @@
 const ExcelJs = require("exceljs");
 const QuickChart = require("quickchart-js");
+const filePath = "./excelFile.xlsx";
 
 const readExcel = async () => {
   const workbook = new ExcelJs.Workbook();
-  await workbook.xlsx.readFile("./excelFile.xlsx");
+  await workbook.xlsx.readFile(filePath);
   const worksheet = workbook.getWorksheet(1);
   const excelData = [];
   const chartData = {
@@ -30,7 +31,7 @@ const readExcel = async () => {
 const downloadExcelFile = async (req, res) => {
   const workbook = new ExcelJs.Workbook();
   const worksheet = workbook.addWorksheet("Excel Data");
-  await workbook.xlsx.readFile("./excelFile.xlsx");
+  await workbook.xlsx.readFile(filePath);
   const worksheet1 = workbook.getWorksheet(1);
   const excelData = [];
   worksheet1.eachRow((row, rowNumber) => {
@@ -41,26 +42,33 @@ const downloadExcelFile = async (req, res) => {
   return workbook;
 };
 
+const generateQuickChartConfig = (chartData) => {
+  return {
+    type: "bar",
+    data: {
+      labels: chartData.categories,
+      datasets: chartData.series.map((ele, i) => ({
+        label: ele.name,
+        data: ele.data,
+        backgroundColor: i === 0 ? "rgb(54, 162, 235)" : "rgb(0, 227, 150, 0.85)",
+      })),
+    },
+  };
+};
+
 const downloadPDF = async () => {
-  const chartData = await readExcel();
+  const filePath = "./excelFile.xlsx";
+  const chartData = await readExcel(filePath);
+  const quickChartConfig = generateQuickChartConfig(chartData);
+
   const myChart = new QuickChart();
   myChart
-    .setConfig({
-      type: "bar",
-      data: {
-        labels: chartData.categories,
-        datasets: chartData.series.map((ele) => {
-          return {
-            label: ele.name,
-            data: ele.data,
-          };
-        }),
-      },
-    })
+    .setConfig(quickChartConfig)
+    .setBackgroundColor("azure")
     .setWidth(800)
     .setHeight(400);
-  const chartImageUrl = myChart.getUrl();
-  return chartImageUrl;
+
+  return myChart.getUrl();
 };
 
 module.exports = { readExcel, downloadExcelFile, downloadPDF };
