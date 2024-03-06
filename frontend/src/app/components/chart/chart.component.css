@@ -1,0 +1,21 @@
+.text-center{
+    text-align: center;
+}
+
+button{
+    
+    padding: 10px;
+    background: #15285e;
+    color: white;
+    outline: none;
+    border: none;
+cursor: pointer;
+}
+
+
+.chart-div{
+
+}
+.p-24{
+    padding: 24px;
+}

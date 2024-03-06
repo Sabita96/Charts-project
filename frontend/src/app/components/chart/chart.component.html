@@ -1,0 +1,14 @@
+<div class="row float-right m-3 chart-div p-24">
+
+    <button (click)="downloadExcelFile()">Download excel</button>
+    <button (click)="downloadPDFFile()" class="ml-3">Download PDF</button>
+  </div>
+  <h2 class="text-center">Chart Data</h2>
+
+  <div class="text-center mt-5 p-24" *ngIf="chartOptions">
+    <div id="chart">
+      <apx-chart [series]="chartOptions['series']" [chart]="chartOptions['chart']"
+        [dataLabels]="chartOptions['dataLabels']" [plotOptions]="chartOptions['plotOptions']"
+        [xaxis]="chartOptions['xaxis']" [stroke]="chartOptions['stroke']"></apx-chart>
+    </div>
+  </div>
